@@ -33,7 +33,7 @@ defmodule Alice.Handlers.Haha do
     conn
     |> get_state(:haha_count, 0)
     |> case do
-      10 ->
+      93 ->
         conn
         |> put_state(:haha_count, 0)
         |> update_winners()
