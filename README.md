@@ -29,7 +29,7 @@ If [available in Hex](https://hex.pm/packages/alice_haha), the package can be in
        [
          {:websocket_client, github: "jeremyong/websocket_client"},
          {:alice, "~> 0.3"},
-         {:alice_haha, "~> 0.1"}
+         {:alice_haha, "~> 1.0"}
        ]
     end
     ```
