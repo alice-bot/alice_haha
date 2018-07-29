@@ -25,8 +25,8 @@ defmodule Alice.Handlers.Haha do
   use Alice.Router
   alias Alice.Conn
 
-  route ~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i, :haha
-  command ~r/>:? haha winners\z/i, :winners
+  route(~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i, :haha)
+  command(~r/>:? haha winners\z/i, :winners)
 
   @doc "😂"
   def haha(conn) do
@@ -38,7 +38,9 @@ defmodule Alice.Handlers.Haha do
         |> put_state(:haha_count, 0)
         |> update_winners()
         |> haha_reply()
-      count -> put_state(conn, :haha_count, count + 1)
+
+      count ->
+        put_state(conn, :haha_count, count + 1)
     end
   end
 
@@ -51,9 +53,9 @@ defmodule Alice.Handlers.Haha do
   defp sorted_winners(conn, sort_func) do
     conn
     |> get_winners()
-    |> Enum.sort_by(fn({_,wins}) -> wins end, sort_func)
+    |> Enum.sort_by(fn {_, wins} -> wins end, sort_func)
     |> Enum.with_index(1)
-    |> Enum.map(fn({{user_id,wins},n}) -> "#{n}. <@#{user_id}>: #{wins}" end)
+    |> Enum.map(fn {{user_id, wins}, n} -> "#{n}. <@#{user_id}>: #{wins}" end)
     |> Enum.reverse()
     |> Kernel.++(["List of HAHA Winners"])
     |> Enum.reverse()
@@ -71,12 +73,15 @@ defmodule Alice.Handlers.Haha do
   defp updated_winners(%Conn{message: %{user: user_id}} = conn) do
     conn
     |> get_state(:haha_winners, %{})
-    |> Map.merge(%{to_string(user_id) => 1}, fn _key, old_val, new_value -> old_val + new_value end)
+    |> Map.merge(%{to_string(user_id) => 1}, fn _key, old_val, new_value ->
+      old_val + new_value
+    end)
   end
 
   defp haha_reply(conn) do
     conn
     |> delayed_reply(sorted_winners(conn, &</2), 1000)
+
     conn
     |> reply("https://s3.amazonaws.com/giphymedia/media/Ic97mPViHEG5O/giphy.gif")
   end

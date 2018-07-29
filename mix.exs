@@ -2,14 +2,16 @@ defmodule AliceHaha.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :alice_haha,
-     version: "1.0.2",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     description: description,
-     package: package,
-     deps: deps]
+    [
+      app: :alice_haha,
+      version: "1.0.2",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      description: description,
+      package: package,
+      deps: deps
+    ]
   end
 
   def application do
@@ -45,10 +47,14 @@ defmodule AliceHaha.Mixfile do
   end
 
   defp package do
-    [files: ["lib", "config", "mix.exs", "README*"],
-     maintainers: ["Tyler Clemens"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/tielur/alice_haha/",
-              "Docs"   => "https://github.com/tielur/alice_haha/"}]
+    [
+      files: ["lib", "config", "mix.exs", "README*"],
+      maintainers: ["Tyler Clemens"],
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => "https://github.com/tielur/alice_haha/",
+        "Docs" => "https://github.com/tielur/alice_haha/"
+      }
+    ]
   end
 end
