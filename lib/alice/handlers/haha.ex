@@ -42,7 +42,7 @@ defmodule Alice.Handlers.Haha do
     end
   end
 
-  @doc "Returns list of haha winners"
+  @doc "`haha winners` - get the list of haha winners"
   def winners(conn) do
     sorted_winners(conn, &</2)
     |> reply(conn)
