@@ -46,7 +46,7 @@ defmodule Alice.Handlers.Haha do
 
   @doc "`haha winners` - get the list of haha winners"
   def winners(conn) do
-    sorted_winners(conn, &</2)
+    sorted_winners(conn, &>/2)
     |> reply(conn)
   end
 
@@ -81,6 +81,6 @@ defmodule Alice.Handlers.Haha do
   defp haha_reply(conn) do
     conn
     |> reply("https://s3.amazonaws.com/giphymedia/media/Ic97mPViHEG5O/giphy.gif")
-    |> delayed_reply(sorted_winners(conn, &</2), 1000)
+    |> delayed_reply(sorted_winners(conn, &>/2), 1000)
   end
 end
