@@ -25,9 +25,7 @@ defmodule Alice.Handlers.Haha do
   use Alice.Router
   alias Alice.Conn
 
-  @haha_regex ~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i
-
-  route(@haha_regex, :haha)
+  route(~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i, :haha)
   command(~r/>:? haha winners\z/i, :winners)
 
   @doc "😂"
@@ -42,16 +40,7 @@ defmodule Alice.Handlers.Haha do
         |> haha_reply()
 
       count ->
-        slack_token = Application.get_env(:alice, :api_key)
-        %{"messages" => messages} = Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
-        messages
-        |> Enum.filter(&(&1["user"] == conn.message.user))
-        |> Enum.map(&(&1["text"]))
-        |> Enum.count(&haha?/1)
-        |> case do
-          1 -> put_state(conn, :haha_count, count + 1)
-          _ -> conn
-        end
+        put_state(conn, :haha_count, count + 1)
     end
   end
 
@@ -59,10 +48,6 @@ defmodule Alice.Handlers.Haha do
   def winners(conn) do
     sorted_winners(conn, &>/2)
     |> reply(conn)
-  end
-
-  defp haha?(message) do
-    Regex.match?(@haha_regex, message)
   end
 
   defp sorted_winners(conn, sort_func) do
@@ -95,7 +80,7 @@ defmodule Alice.Handlers.Haha do
 
   defp haha_reply(conn) do
     conn
-    |> reply("https://i.imgur.com/KZ0rw68.gif")
+    |> reply("https://s3.amazonaws.com/giphymedia/media/Ic97mPViHEG5O/giphy.gif")
     |> delayed_reply(sorted_winners(conn, &>/2), 1000)
   end
 end
