@@ -25,7 +25,9 @@ defmodule Alice.Handlers.Haha do
   use Alice.Router
   alias Alice.Conn
 
-  route(~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i, :haha)
+  @haha_regex ~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i
+
+  route(@haha_regex, :haha)
   command(~r/>:? haha winners\z/i, :winners)
 
   @doc "😂"
@@ -48,6 +50,10 @@ defmodule Alice.Handlers.Haha do
   def winners(conn) do
     sorted_winners(conn, &>/2)
     |> reply(conn)
+  end
+
+  defp haha?(message) do
+    Regex.match?(@haha_regex, message)
   end
 
   defp sorted_winners(conn, sort_func) do
