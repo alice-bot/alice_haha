@@ -46,7 +46,7 @@ defmodule Alice.Handlers.Haha do
         %{"messages" => messages} = Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
         messages
         |> Enum.filter(&(&1["user"] == conn.message.user))
-        |> Enum.map(&(&1["text"])
+        |> Enum.map(&(&1["text"]))
         |> Enum.count(&haha?/1)
         |> case do
           1 -> put_state(conn, :haha_count, count + 1)
