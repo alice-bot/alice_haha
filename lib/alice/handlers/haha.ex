@@ -106,5 +106,6 @@ defmodule Alice.Handlers.Haha do
     conn
     |> reply("https://i.imgur.com/KZ0rw68.gif")
     |> delayed_reply(sorted_winners(conn, &>/2), 1000)
+    conn
   end
 end
