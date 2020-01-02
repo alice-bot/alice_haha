@@ -6,7 +6,7 @@ defmodule Alice.Handlers.Haha do
 
   A laugh is considered any of the following:
 
-  `~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i`
+  `~r/\b([ha]*ha[ha]*|lo+l|lmf?ao|rofl|roflmao)\b/i`
 
   Examples:
   lol
@@ -25,7 +25,7 @@ defmodule Alice.Handlers.Haha do
   use Alice.Router
   alias Alice.Conn
 
-  @haha_regex ~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i
+  @haha_regex ~r/\b([ha]*ha[ha]*|lo+l|lmf?ao|rofl|roflmao)\b/i
 
   route(@haha_regex, :haha)
   command(~r/>:? haha winners\z/i, :winners)
@@ -43,19 +43,22 @@ defmodule Alice.Handlers.Haha do
 
       count ->
         slack_token = Application.get_env(:alice, :api_key)
+
         %{"messages" => messages} =
           cond do
             conn.message.channel in Map.keys(conn.slack.channels) ->
               Slack.Web.Channels.history(conn.message.channel, %{count: 2, token: slack_token})
+
             conn.message.channel in Map.keys(conn.slack.ims) ->
               Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
+
             true ->
               %{"messages" => [%{"user" => conn.message.user, "text" => "lol"}]}
           end
 
         messages
         |> Enum.filter(&(&1["user"] == conn.message.user))
-        |> Enum.map(&(&1["text"]))
+        |> Enum.map(& &1["text"])
         |> Enum.count(&haha?/1)
         |> case do
           1 -> put_state(conn, :haha_count, count + 1)
@@ -106,6 +109,7 @@ defmodule Alice.Handlers.Haha do
     conn
     |> reply("https://i.imgur.com/KZ0rw68.gif")
     |> delayed_reply(sorted_winners(conn, &>/2), 1000)
+
     conn
   end
 end
