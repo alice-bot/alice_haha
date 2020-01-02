@@ -42,24 +42,10 @@ defmodule Alice.Handlers.Haha do
         |> haha_reply()
 
       count ->
-        slack_token = Application.get_env(:alice, :api_key)
-        %{"messages" => messages} =
-          cond do
-            conn.message.channel in Map.keys(conn.slack.channels) ->
-              Slack.Web.Channels.history(conn.message.channel, %{count: 2, token: slack_token})
-            conn.message.channel in Map.keys(conn.slack.ims) ->
-              Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
-            true ->
-              %{"messages" => [%{"user" => conn.message.user, "text" => "lol"}]}
-          end
-
-        messages
-        |> Enum.filter(&(&1["user"] == conn.message.user))
-        |> Enum.map(&(&1["text"]))
-        |> Enum.count(&haha?/1)
-        |> case do
-          1 -> put_state(conn, :haha_count, count + 1)
-          _ -> conn
+        if repetitive_laugh?(conn) do
+          conn
+        else
+          put_state(conn, :haha_count, count + 1)
         end
     end
   end
@@ -68,6 +54,32 @@ defmodule Alice.Handlers.Haha do
   def winners(conn) do
     sorted_winners(conn, &>/2)
     |> reply(conn)
+  end
+
+  defp repetitive_laugh?(conn) do
+    slack_token = Application.get_env(:alice, :api_key)
+
+    %{"messages" => messages} =
+      cond do
+        conn.message.channel in Map.keys(conn.slack.channels) ->
+          Slack.Web.Channels.history(conn.message.channel, %{count: 2, token: slack_token})
+
+        conn.message.channel in Map.keys(conn.slack.ims) ->
+          Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
+
+        true ->
+          # fall through that defaults to not being reptitive
+          %{"messages" => [%{"user" => conn.message.user, "text" => "lol"}]}
+      end
+
+    messages
+    |> Enum.filter(&(&1["user"] == conn.message.user))
+    |> Enum.map(& &1["text"])
+    |> Enum.count(&haha?/1)
+    |> case do
+      1 -> false
+      _ -> true
+    end
   end
 
   defp haha?(message) do
