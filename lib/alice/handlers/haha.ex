@@ -82,7 +82,7 @@ defmodule Alice.Handlers.Haha do
     |> get_winners()
     |> Enum.sort_by(fn {_, wins} -> wins end, sort_func)
     |> Enum.with_index(1)
-    |> Enum.map(fn {{user_id, wins}, n} -> "#{n}. <@#{user_id}>: #{wins}" end)
+    |> Enum.map(fn {{user_id, wins}, n} -> "#{n}. <#{user_id}>: #{wins}" end)
     |> Enum.reverse()
     |> Kernel.++(["List of HAHA Winners"])
     |> Enum.reverse()
