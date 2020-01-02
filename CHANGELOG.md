@@ -1,5 +1,9 @@
+## v1.0.7
+  * Regex bug fix [#8](https://github.com/tielur/alice_haha/pull/8)
+
 ## v1.0.6
   * Bug fix related to the use of delayed_reply [#7](https://github.com/tielur/alice_haha/pull/7)
+
 ## v1.0.5
   * Bug fix to repetitive laugh check. It now correctly handlers direct messages
     and messages in channels.
