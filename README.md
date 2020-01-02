@@ -4,7 +4,7 @@ This handler will allow Alice to keep track of people laughing and reply with an
 
   A laugh is considered any of the following:
 
-  `~r/\b([ha][ha]+|lo+l|lmf?ao|rofl|roflmao)\b/i`
+  `~r/\b([ha]*ha[ha]*|lo+l|lmf?ao|rofl|roflmao)\b/i`
 
   Examples:
   lol
