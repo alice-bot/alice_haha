@@ -1,3 +1,6 @@
+## v1.0.78
+  * Updates handler to work with slack 0.23.2
+
 ## v1.0.7
   * Regex bug fix [#8](https://github.com/tielur/alice_haha/pull/8)
 
