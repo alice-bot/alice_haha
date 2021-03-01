@@ -44,19 +44,9 @@ defmodule Alice.Handlers.Haha do
       count ->
         slack_token = Application.get_env(:alice, :api_key)
 
-        %{"messages" => messages} =
-          cond do
-            conn.message.channel in Map.keys(conn.slack.channels) ->
-              Slack.Web.Channels.history(conn.message.channel, %{count: 2, token: slack_token})
-
-            conn.message.channel in Map.keys(conn.slack.ims) ->
-              Slack.Web.Im.history(conn.message.channel, %{count: 2, token: slack_token})
-
-            true ->
-              %{"messages" => [%{"user" => conn.message.user, "text" => "lol"}]}
-          end
-
-        messages
+        conn.message.channel
+        |> Slack.Web.Conversations.history(%{limit: 2, token: slack_token})
+        |> Map.get("messages")
         |> Enum.filter(&(&1["user"] == conn.message.user))
         |> Enum.map(& &1["text"])
         |> Enum.count(&haha?/1)
