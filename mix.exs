@@ -4,7 +4,7 @@ defmodule AliceHaha.Mixfile do
   def project do
     [
       app: :alice_haha,
-      version: "1.0.7",
+      version: "2.0.0",
       elixir: "~> 1.3",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
